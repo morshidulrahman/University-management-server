@@ -1,26 +1,33 @@
-import { Request, Response } from "express";
+
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { userServices } from "./user.service";
+import SendResponse from "../../utils/SendResponse";
+import httpStatus from "http-status";
 
 
-const createStudent = async (req: Request, res: Response) => {
-    try {
-        const { password, student: studentData } = req.body;
-        const result = await userServices.createStudentIntoDB(password, studentData);
 
-        res.status(200).json({
-            success: true,
-            message: 'Student is created succesfully',
-            data: result,
-        });
-    } catch (err: any) {
-        res.status(500).json({
-            success: false,
-            message: err.message || 'Failed to create student',
-            error: err,
-        })
+
+const catchAsync = (fn: RequestHandler) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        Promise.resolve(fn(req, res, next)).catch(err => next(err))
     }
-};
+}
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+const createStudent = catchAsync(async (req, res, next) => {
+
+    const { password, student: studentData } = req.body;
+    const result = await userServices.createStudentIntoDB(password, studentData);
+
+    SendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: 'Student created successfully',
+        data: result
+    })
+
+}
+)
 export const userController = {
     createStudent
 }
