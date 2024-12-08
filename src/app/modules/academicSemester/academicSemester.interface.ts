@@ -25,3 +25,8 @@ export type TacademicSemester = {
     endMonth: TMonths;
 
 }
+
+
+export type AcademicSemesterNameandCode = {
+    [key: string]: string;
+}
