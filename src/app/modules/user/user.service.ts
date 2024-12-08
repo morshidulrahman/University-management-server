@@ -1,35 +1,40 @@
-
-import config from "../../config";
-import { Student } from "../student/student.interface";
-import { StudentModel } from "../student/student.model";
-import { Tuser } from "./user.interface";
-import { User } from "./user.model";
-
+import config from '../../config';
+import { AcademicSemesterModel } from '../academicSemester/academicSemester.model';
+import { Student } from '../student/student.interface';
+import { StudentModel } from '../student/student.model';
+import { Tuser } from './user.interface';
+import { User } from './user.model';
+import { generateUserid } from './user.utils';
 
 const createStudentIntoDB = async (password: string, studentData: Student) => {
+  const userData: Partial<Tuser> = {};
 
-    const userData: Partial<Tuser> = {}
+  userData.password = password || (config.default_password as string);
 
-    userData.password = password || (config.default_password as string)
+  userData.role = 'student';
 
-    userData.role = 'student'
+  const addimisionsesmeter = await AcademicSemesterModel.findById(
+    studentData.admissionSemester,
+  );
 
-    userData.id = '10000208'
+  if (!addimisionsesmeter) {
+    throw new Error('Admission Semester not found');
+  }
 
-    const newUser = await User.create(userData)
+  userData.id = await generateUserid(addimisionsesmeter);
 
-    if (Object.keys(newUser).length) {
-        studentData.id = newUser.id
-        studentData.user = newUser._id
+  const newUser = await User.create(userData);
 
-        const newStudent = await StudentModel.create(studentData)
+  if (Object.keys(newUser).length) {
+    studentData.id = newUser.id;
+    studentData.user = newUser._id;
 
-        return newStudent
-    }
+    const newStudent = await StudentModel.create(studentData);
 
+    return newStudent;
+  }
 };
 
-
 export const userServices = {
-    createStudentIntoDB
-}
+  createStudentIntoDB,
+};
