@@ -15,13 +15,27 @@ const findlastuser = async () => {
       createdAt: -1,
     })
     .lean();
-
-  return laststudent?.id ? laststudent.id.substring(6) : undefined;
+  //2030 01 0001
+  return laststudent?.id ? laststudent.id : undefined;
 };
 
 export const generateUserid = async (payload: TacademicSemester) => {
-  ///
-  const currentId = (await findlastuser()) || (0).toString();
+  let currentId = (0).toString();
+
+  const laststudentid = await findlastuser();
+
+  const laststudentsemesterCode = laststudentid?.substring(4, 6); //01
+  const laststudentyear = laststudentid?.substring(0, 4); //2030
+  const currentstudentyear = payload.year;
+  const currentstudentCode = payload.code;
+
+  if (
+    laststudentid &&
+    laststudentyear === currentstudentyear &&
+    laststudentsemesterCode === currentstudentCode
+  ) {
+    currentId = laststudentid?.substring(6);
+  }
 
   let incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
 
