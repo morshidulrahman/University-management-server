@@ -19,6 +19,7 @@ const getSingleAcademicDepartmentIntoDB = async (id: string) => {
   const result = await AcademicDepartmentModel.findOne({ _id: id }).populate(
     'academicFaculty',
   );
+
   return result;
 };
 

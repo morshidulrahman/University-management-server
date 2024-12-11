@@ -3,8 +3,6 @@ import { StudentServices } from './student.service';
 import SendResponse from '../../utils/SendResponse';
 import httpStatus from 'http-status';
 
-
-
 const getAllStudents = async (req: Request, res: Response) => {
   try {
     const result = await StudentServices.getAllStudentsFromDB();
@@ -57,5 +55,5 @@ const deleteStudent = async (
 export const StudentControllers = {
   getAllStudents,
   getSingleStudent,
-  deleteStudent
+  deleteStudent,
 };
