@@ -3,7 +3,7 @@
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import SendResponse from '../../utils/SendResponse';
-import { AcademicFacultyServices } from './academicFaculty.service';
+import { AcademicDepartmentServices } from './academicDepartment.service';
 
 const AcademicDepartmentCreated = catchAsync(async (req, res, next) => {
   const DepartmentData = req.body;
@@ -31,10 +31,10 @@ const getAcademicDepartment = catchAsync(async (req, res, next) => {
 });
 
 const getSingleAcademicDepartment = catchAsync(async (req, res, next) => {
-  const { DepartmentId } = req.params;
+  const { departmentId } = req.params;
   const result =
     await AcademicDepartmentServices.getSingleAcademicDepartmentIntoDB(
-      DepartmentId,
+      departmentId,
     );
   SendResponse(res, {
     success: true,
@@ -45,11 +45,11 @@ const getSingleAcademicDepartment = catchAsync(async (req, res, next) => {
 });
 
 const UpdateSingleAcademicDepartment = catchAsync(async (req, res, next) => {
-  const { DepartmentId } = req.params;
+  const { departmentId } = req.params;
   const updatedData = req.body;
   const result =
     await AcademicDepartmentServices.updateAcademicDepartmentIntoDB(
-      DepartmentId,
+      departmentId,
       updatedData,
     );
   SendResponse(res, {
