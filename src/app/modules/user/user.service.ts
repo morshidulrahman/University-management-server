@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
 import config from '../../config';
-import AppError from '../../errors/Apperror';
+
 import { AcademicSemesterModel } from '../academicSemester/academicSemester.model';
 import { Student } from '../student/student.interface';
 import { StudentModel } from '../student/student.model';

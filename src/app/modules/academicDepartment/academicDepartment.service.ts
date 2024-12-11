@@ -27,9 +27,13 @@ const updateAcademicDepartmentIntoDB = async (
   id: string,
   Depdata: Partial<TacamedemiDep>,
 ) => {
-  const result = await AcademicDepartmentModel.findByIdAndUpdate(id, Depdata, {
-    new: true,
-  });
+  const result = await AcademicDepartmentModel.findOneAndUpdate(
+    { _id: id },
+    Depdata,
+    {
+      new: true,
+    },
+  );
   return result;
 };
 
