@@ -4,7 +4,7 @@ import { StudentModel } from './student.model';
 import mongoose from 'mongoose';
 import { User } from '../user/user.model';
 import { Student } from './student.interface';
-import QueryBuilder from '../../builder/builder';
+import QueryBuilder from '../builder/builder';
 import { studentSearchableFields } from './studentconst';
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
