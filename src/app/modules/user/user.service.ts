@@ -1,6 +1,5 @@
 import httpStatus from 'http-status';
 import config from '../../config';
-
 import { AcademicSemesterModel } from '../academicSemester/academicSemester.model';
 import { Student } from '../student/student.interface';
 import { StudentModel } from '../student/student.model';
@@ -8,6 +7,7 @@ import { Tuser } from './user.interface';
 import { User } from './user.model';
 import { generateUserid } from './user.utils';
 import mongoose from 'mongoose';
+import AppError from '../../errors/Apperror';
 
 const createStudentIntoDB = async (password: string, studentData: Student) => {
   const userData: Partial<Tuser> = {};

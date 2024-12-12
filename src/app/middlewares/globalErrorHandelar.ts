@@ -8,6 +8,10 @@ import { TErrorSources } from '../interface/error';
 import { ZodError } from 'zod';
 import handleZodError from '../errors/handleZodError';
 import handleValidationError from '../errors/handleValidationError';
+import handleCastError from '../errors/handleCastError';
+import AppError from '../errors/Apperror';
+import handleDuplicateError from '../errors/handleDuplicateError';
+import config from '../config';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-unused-vars
 export const globalErrorHandelar: ErrorRequestHandler = (
@@ -35,6 +39,33 @@ export const globalErrorHandelar: ErrorRequestHandler = (
     message = simpliedError.message;
     errorSources = simpliedError.errorSources;
     statusCode = simpliedError.statusCode;
+  } else if (err?.name === 'CastError') {
+    const simpliedError = handleCastError(err);
+    message = simpliedError.message;
+    errorSources = simpliedError.errorSources;
+    statusCode = simpliedError.statusCode;
+  } else if (err?.code === 11000) {
+    const simpliedError = handleDuplicateError(err);
+    message = simpliedError.message;
+    errorSources = simpliedError.errorSources;
+    statusCode = simpliedError.statusCode;
+  } else if (err instanceof AppError) {
+    statusCode = err?.statusCode;
+    message = err.message;
+    errorSources = [
+      {
+        path: '',
+        message: err?.message,
+      },
+    ];
+  } else if (err instanceof Error) {
+    message = err.message;
+    errorSources = [
+      {
+        path: '',
+        message: err?.message,
+      },
+    ];
   }
 
   return res.status(statusCode).json({
@@ -42,5 +73,6 @@ export const globalErrorHandelar: ErrorRequestHandler = (
     message,
     errorSources,
     err,
+    stack: config.NODE_ENV === 'development' ? err?.stack : null,
   });
 };
