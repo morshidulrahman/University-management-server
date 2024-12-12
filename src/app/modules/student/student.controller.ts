@@ -5,7 +5,7 @@ import httpStatus from 'http-status';
 
 const getAllStudents = async (req: Request, res: Response) => {
   try {
-    const result = await StudentServices.getAllStudentsFromDB();
+    const result = await StudentServices.getAllStudentsFromDB(req.query);
 
     res.status(200).json({
       success: true,
