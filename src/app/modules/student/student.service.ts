@@ -4,73 +4,93 @@ import { StudentModel } from './student.model';
 import mongoose from 'mongoose';
 import { User } from '../user/user.model';
 import { Student } from './student.interface';
+import QueryBuilder from '../../builder/builder';
+import { studentSearchableFields } from './studentconst';
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
-  let searchTerm = '';
-  const queryobj = { ...query };
-  if (query?.searchTerm) {
-    searchTerm = query.searchTerm as string;
-  }
+  // let searchTerm = '';
+  // const queryobj = { ...query };
+  // if (query?.searchTerm) {
+  //   searchTerm = query.searchTerm as string;
+  // }
 
-  const searchQuery = StudentModel.find({
-    $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
-      [field]: { $regex: searchTerm, $options: 'i' },
-    })),
-  });
+  // const searchQuery = StudentModel.find({
+  //   $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
+  //     [field]: { $regex: searchTerm, $options: 'i' },
+  //   })),
+  // });
 
   // HOW OUR FORMAT SHOULD BE FOR PARTIAL MATCH  :
   //  { email: { $regex : query.searchTerm , $options: i}}
   //  { presentAddress: { $regex : query.searchTerm , $options: i}}
   //  { 'name.firstName': { $regex : query.searchTerm , $options: i}}
 
-  const excludedField = ['searchTerm', 'sort', 'limit', 'fields', 'page'];
+  // const excludedField = ['searchTerm', 'sort', 'limit', 'fields', 'page'];
 
-  excludedField.forEach((el) => delete queryobj[el]);
+  // excludedField.forEach((el) => delete queryobj[el]);
 
-  const filterQuery = searchQuery
-    .find(queryobj)
-    .populate('admissionSemester')
-    .populate({
-      path: 'academicDepartment',
-      populate: { path: 'academicFaculty' },
-    });
+  // const filterQuery = searchQuery
+  //   .find(queryobj)
+  //   .populate('admissionSemester')
+  //   .populate({
+  //     path: 'academicDepartment',
+  //     populate: { path: 'academicFaculty' },
+  //   });
 
-  let sort = '-createdAt';
-  if (query.sort) {
-    sort = query.sort as string;
-  }
+  // let sort = '-createdAt';
+  // if (query.sort) {
+  //   sort = query.sort as string;
+  // }
 
-  const sortQuery = filterQuery.sort(sort);
+  // const sortQuery = filterQuery.sort(sort);
 
-  let page = 1; // SET DEFAULT VALUE FOR PAGE
-  let limit = 1; // SET DEFAULT VALUE FOR LIMIT
-  let skip = 0; // SET DEFAULT VALUE FOR SKIP
+  // let page = 1; // SET DEFAULT VALUE FOR PAGE
+  // let limit = 1; // SET DEFAULT VALUE FOR LIMIT
+  // let skip = 0; // SET DEFAULT VALUE FOR SKIP
 
-  if (query.limit) {
-    limit = Number(query.limit);
-  }
+  // if (query.limit) {
+  //   limit = Number(query.limit);
+  // }
 
-  if (query.page) {
-    page = Number(query.page);
-    skip = (page - 1) * limit;
-  }
+  // if (query.page) {
+  //   page = Number(query.page);
+  //   skip = (page - 1) * limit;
+  // }
 
-  const paginateQuery = sortQuery.skip(skip);
+  // const paginateQuery = sortQuery.skip(skip);
 
-  const limitQuery = paginateQuery.limit(limit);
+  // const limitQuery = paginateQuery.limit(limit);
 
   // FIELDS LIMITING FUNCTIONALITY:
   // HOW OUR FORMAT SHOULD BE FOR PARTIAL MATCH
 
-  let fields = '-__v'; // SET DEFAULT VALUE
+  // let fields = '-__v'; // SET DEFAULT VALUE
 
-  if (query.fields) {
-    fields = (query.fields as string).split(',').join(' ');
-  }
+  // if (query.fields) {
+  //   fields = (query.fields as string).split(',').join(' ');
+  // }
 
-  const feildQuery = await limitQuery.select(fields);
+  // const feildQuery = await limitQuery.select(fields);
 
-  return feildQuery;
+  // return feildQuery;
+  const studnetquery = new QueryBuilder(
+    StudentModel.find()
+      .populate('admissionSemester')
+      .populate({
+        path: 'academicDepartment',
+        populate: { path: 'academicFaculty' },
+      }),
+    query,
+  )
+    .search(studentSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await studnetquery.modelQuery;
+
+  return result;
 };
 
 const getSingleStudentFromDB = async (id: string) => {
