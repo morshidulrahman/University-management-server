@@ -43,3 +43,36 @@ export const generateUserid = async (payload: TacademicSemester) => {
 
   return incrementId;
 };
+
+const findlastadminid = async () => {
+  const laststudent = await User.findOne(
+    {
+      role: 'admin',
+    },
+    {
+      id: 1,
+      _id: 0,
+    },
+  )
+    .sort({
+      createdAt: -1,
+    })
+    .lean();
+  //2030 01 0001
+  return laststudent?.id ? laststudent.id.substring(2) : undefined;
+};
+export const generateAdminid = async () => {
+  let currentId = (0).toString();
+
+  const laststudentid = await findlastadminid();
+
+  if (laststudentid) {
+    currentId = laststudentid;
+  }
+
+  let incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
+
+  incrementId = `A-${incrementId}`;
+
+  return incrementId;
+};

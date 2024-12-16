@@ -119,8 +119,8 @@ adminSchema.pre('aggregate', function (next) {
 
 //checking if user is already exist!
 adminSchema.statics.isUserExists = async function (id: string) {
-  const existingUser = await Admin.findOne({ id });
+  const existingUser = await AdminModel.findOne({ id });
   return existingUser;
 };
 
-export const Admin = model<TAdmin>('Admin', adminSchema);
+export const AdminModel = model<TAdmin>('Admin', adminSchema);
