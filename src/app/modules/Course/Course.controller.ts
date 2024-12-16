@@ -27,8 +27,8 @@ const getAllCourses = catchAsync(async (req, res, next) => {
 });
 
 const getSingleCourse = catchAsync(async (req, res, next) => {
-  const { semesterId } = req.params;
-  const result = await CourseServices.getSingleCourseIntoDB(semesterId);
+  const { courseId } = req.params;
+  const result = await CourseServices.getSingleCourseIntoDB(courseId);
   SendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -38,12 +38,9 @@ const getSingleCourse = catchAsync(async (req, res, next) => {
 });
 
 const UpdateSingleCourse = catchAsync(async (req, res, next) => {
-  const { semesterId } = req.params;
+  const { courseId } = req.params;
   const updatedData = req.body;
-  const result = await CourseServices.updateCourseIntoDB(
-    semesterId,
-    updatedData,
-  );
+  const result = await CourseServices.updateCourseIntoDB(courseId, updatedData);
   SendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
