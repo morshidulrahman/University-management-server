@@ -15,6 +15,17 @@ const getSingleFaculty = catchAsync(async (req, res) => {
   });
 });
 
+const CreateFaculty = catchAsync(async (req, res) => {
+  const result = await FacultyServices.CreateFacultyintoDb(req.body);
+
+  SendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Faculty is created succesfully',
+    data: result,
+  });
+});
+
 const getAllFaculties = catchAsync(async (req, res) => {
   const result = await FacultyServices.getAllFacultiesFromDB(req.query);
 
@@ -56,4 +67,5 @@ export const FacultyControllers = {
   getSingleFaculty,
   deleteFaculty,
   updateFaculty,
+  CreateFaculty,
 };

@@ -23,6 +23,12 @@ const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
+const CreateFacultyintoDb = async (facultydata: TFaculty) => {
+  const newFaculty = new Faculty(facultydata);
+  await newFaculty.save();
+  return newFaculty;
+};
+
 const getSingleFacultyFromDB = async (id: string) => {
   const result = await Faculty.findById(id).populate('academicDepartment');
 
@@ -94,4 +100,6 @@ export const FacultyServices = {
   getSingleFacultyFromDB,
   updateFacultyIntoDB,
   deleteFacultyFromDB,
+
+  CreateFacultyintoDb,
 };

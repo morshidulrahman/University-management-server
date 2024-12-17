@@ -6,6 +6,8 @@ import { AcademicFacultyRoutes } from '../modules/academicFaculty/academicFacult
 import { AcademicDepartmentRoutes } from '../modules/academicDepartment/academicDepartment.route';
 import { AdminRoutes } from '../modules/Admin/admin.route';
 import { CourseRouter } from '../modules/Course/Course.route';
+import { FacultyRoutes } from '../modules/Faculty/Faculty.route';
+import { semesterRegisterRouters } from '../modules/semesterRegistration/semesterRegistration.route';
 
 const router = Router();
 
@@ -37,6 +39,14 @@ const midleRoutes = [
   {
     path: '/courses',
     route: CourseRouter,
+  },
+  {
+    path: '/faculties',
+    route: FacultyRoutes,
+  },
+  {
+    path: '/semester-registrations',
+    route: semesterRegisterRouters,
   },
 ];
 
